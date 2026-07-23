@@ -185,3 +185,12 @@ model TrainingResource {
 
   @@index([kind])
 }
+
+// ─────────────────────────────────────────────────────────────
+// Configuración general (clave/valor) — p. ej. integración Telegram
+// ─────────────────────────────────────────────────────────────
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}

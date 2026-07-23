@@ -1,7 +1,8 @@
+import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { getMetrics } from "@/lib/metrics";
 import { ROLES, MODEL_STATUS, STATUS_LABELS } from "@/lib/constants";
-import { money, pct } from "@/lib/format";
+import { money, pct, dateShort } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
 
 function Stat({
@@ -35,6 +36,21 @@ export default async function DashboardPage() {
   const recruiterCount = master
     ? await prisma.user.count({ where: { role: "RECRUITER" } })
     : 0;
+
+  // Nuevas postulaciones (formulario web) para el master.
+  const nuevasPostulaciones = master
+    ? await prisma.model.findMany({
+        where: { source: "FORM", status: "FORMULARIO_COMPLETO" },
+        orderBy: { createdAt: "desc" },
+        take: 6,
+        select: {
+          id: true,
+          fullName: true,
+          country: true,
+          createdAt: true,
+        },
+      })
+    : [];
 
   return (
     <div>
@@ -90,6 +106,46 @@ export default async function DashboardPage() {
             value={money(metrics.earnings.pending)}
           />
           <Stat label="Cobradas" value={String(metrics.cobrada)} />
+        </section>
+      )}
+
+      {/* Nuevas postulaciones (aviso al master) */}
+      {master && nuevasPostulaciones.length > 0 && (
+        <section className="card mt-6 border-sky-200 bg-sky-50/40 p-6">
+          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-slate-800">
+            🔔 Nuevas postulaciones
+            <span className="rounded-full bg-sky-600 px-2 py-0.5 text-xs text-white">
+              {nuevasPostulaciones.length}
+            </span>
+          </h2>
+          <ul className="divide-y divide-sky-100">
+            {nuevasPostulaciones.map((m) => (
+              <li
+                key={m.id}
+                className="flex items-center justify-between py-2 text-sm"
+              >
+                <div>
+                  <Link
+                    href={`/dashboard/modelos/${m.id}`}
+                    className="font-medium text-sky-700 hover:underline"
+                  >
+                    {m.fullName}
+                  </Link>
+                  <span className="text-slate-400">
+                    {" "}
+                    · {m.country || "país s/d"}
+                  </span>
+                </div>
+                <span className="text-xs text-slate-400">
+                  {dateShort(m.createdAt)}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-xs text-slate-500">
+            Entrá a cada una, revisá el listing 🎖️ generado, ponéle precio y
+            enviálo por Telegram.
+          </p>
         </section>
       )}
 

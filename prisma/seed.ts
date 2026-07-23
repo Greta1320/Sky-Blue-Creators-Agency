@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { calcCommission } from "../src/lib/commissions";
+import { buildListing } from "../src/lib/listing";
 
 const prisma = new PrismaClient();
 
@@ -89,6 +90,32 @@ async function main() {
       },
     },
   });
+  const camiForm = {
+    nombre: "Camila Fernández",
+    edad: "24",
+    nacionalidad: "Colombia",
+    celular: "iPhone 13",
+    tiempoPorDia: "5 horas",
+    ingles: "6",
+    reelsTiktok: "Sí",
+    paisesBloquear: "Colombia, Venezuela",
+    masturbacion: "Sí",
+    juguetes: "Sí",
+    sexoHombre: "No",
+    sexoMujer: "Sí",
+    anal: "No",
+    videollamadas: "Sí",
+    lives: "Sí",
+    ofVerificado: "Sí",
+    sueldoOPorcentaje: "Porcentaje",
+    pasaporte: "Sí",
+    trabajaConAgencia: "No",
+    experiencia: "6 meses por su cuenta",
+    contenidoHecho: "Sí, ~50 videos",
+    cuentasOnly: "2",
+    metodoPago: "Paxum",
+    telegram: "@cami_fer",
+  };
   await prisma.model.create({
     data: {
       fullName: "Camila Fernández",
@@ -99,6 +126,8 @@ async function main() {
       status: "FORMULARIO_COMPLETO",
       source: "FORM",
       recruiterId: bruno.id,
+      formData: JSON.stringify(camiForm),
+      listingText: buildListing(camiForm, { status: "AVAILABLE" }),
       statusEvents: {
         create: { toStatus: "FORMULARIO_COMPLETO", note: "Formulario web" },
       },

@@ -23,6 +23,41 @@ export const applySchema = z.object({
   recruiterRef: z.string().optional(),
 });
 
+// Formulario REAL de la modelo (cuestionario completo).
+const opt = z.string().trim().optional();
+export const modelApplySchema = z.object({
+  nombre: z.string().min(2, "Nombre requerido"),
+  edad: z.string().optional(),
+  nacionalidad: opt,
+  celular: opt,
+  tiempoPorDia: opt,
+  ingles: opt,
+  reelsTiktok: opt,
+  paisesBloquear: opt,
+  masturbacion: opt,
+  sexoHombre: opt,
+  sexoMujer: opt,
+  anal: opt,
+  videollamadas: opt,
+  lives: opt,
+  juguetes: opt,
+  ofVerificado: opt,
+  sueldoOPorcentaje: opt,
+  pasaporte: opt,
+  trabajaConAgencia: opt,
+  experiencia: opt,
+  contenidoHecho: opt,
+  cuentasOnly: opt,
+  metodoPago: opt,
+  dondeContenido: opt,
+  tatuajes: opt,
+  telegram: opt,
+  instagram: opt,
+  whatsapp: opt,
+  email: opt,
+  recruiterRef: opt,
+});
+
 // Crear modelo desde el panel o desde Halcón.
 export const createModelSchema = applySchema.partial().extend({
   fullName: z.string().min(2, "Nombre requerido"),

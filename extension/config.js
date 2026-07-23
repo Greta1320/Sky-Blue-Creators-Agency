@@ -2,7 +2,8 @@
 // La URL base de la API se puede cambiar desde la pantalla de ajustes del popup;
 // este es solo el valor por defecto (desarrollo local).
 const HALCON_DEFAULTS = {
-  apiBase: "http://localhost:3000",
+  // Apunta por defecto a la instancia online. Se puede cambiar en Ajustes.
+  apiBase: "https://skyblue-opal.vercel.app",
 };
 
 // Claves usadas en chrome.storage.local

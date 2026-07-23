@@ -6,6 +6,7 @@ import { StatusBadge } from "./StatusBadge";
 import { ALL_MODEL_STATUS, STATUS_LABELS } from "@/lib/constants";
 import { calcCommission } from "@/lib/commissions";
 import { money } from "@/lib/format";
+import { QUESTION_LABELS } from "@/lib/listing";
 
 interface Props {
   master: boolean;
@@ -18,6 +19,59 @@ export function ModelDetail({ master, model, marketOwners }: Props) {
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState(model.status);
   const [note, setNote] = useState("");
+  const [tgMsg, setTgMsg] = useState<string | null>(null);
+
+  const questionnaire: Record<string, string> | null = (() => {
+    try {
+      return model.formData ? JSON.parse(model.formData) : null;
+    } catch {
+      return null;
+    }
+  })();
+
+  async function regenerateListing() {
+    setSaving(true);
+    const res = await fetch(`/api/models/${model.id}/relisting`, {
+      method: "POST",
+    });
+    setSaving(false);
+    if (res.ok) {
+      const d = await res.json();
+      setForm((f) => ({ ...f, listingText: d.model.listingText || "" }));
+    } else {
+      alert("No se pudo regenerar el listing");
+    }
+  }
+
+  function copyListing() {
+    navigator.clipboard?.writeText(form.listingText || "");
+    setTgMsg("Listing copiado ✓");
+    setTimeout(() => setTgMsg(null), 2000);
+  }
+
+  async function sendTelegram() {
+    setSaving(true);
+    setTgMsg(null);
+    // Guardar primero el listing actual para enviar lo que se ve.
+    await fetch(`/api/models/${model.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ listingText: form.listingText }),
+    });
+    const res = await fetch(`/api/models/${model.id}/send-telegram`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    setSaving(false);
+    const d = await res.json().catch(() => ({}));
+    if (res.ok) {
+      setTgMsg("Enviado por Telegram ✓");
+      router.refresh();
+    } else {
+      setTgMsg("⚠️ " + (d.error || "No se pudo enviar. Configurá Telegram en Integraciones."));
+    }
+  }
   const [form, setForm] = useState({
     price: model.price ?? "",
     listingText: model.listingText ?? "",
@@ -183,13 +237,43 @@ export function ModelDetail({ master, model, marketOwners }: Props) {
               </div>
             </div>
             <div className="mt-4">
-              <label className="label">Listing simplificado</label>
+              <div className="mb-1 flex items-center justify-between">
+                <label className="label mb-0">Listing (formato 🎖️)</label>
+                <button
+                  type="button"
+                  onClick={regenerateListing}
+                  className="text-xs font-medium text-sky-700 hover:underline"
+                  disabled={saving}
+                >
+                  ↻ Regenerar desde el formulario
+                </button>
+              </div>
               <textarea
                 className="input font-mono text-xs"
-                rows={5}
+                rows={16}
                 value={form.listingText}
                 onChange={(e) => set("listingText", e.target.value)}
               />
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  onClick={copyListing}
+                >
+                  📋 Copiar
+                </button>
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={sendTelegram}
+                  disabled={saving || !form.listingText}
+                >
+                  ✈️ Enviar por Telegram
+                </button>
+                {tgMsg && (
+                  <span className="text-sm text-slate-600">{tgMsg}</span>
+                )}
+              </div>
             </div>
 
             {base > 0 && (
@@ -238,9 +322,31 @@ export function ModelDetail({ master, model, marketOwners }: Props) {
         </div>
       </div>
 
-      {/* Historial */}
-      <div className="card h-fit p-6">
-        <h2 className="mb-3 text-lg font-semibold">Historial</h2>
+      {/* Columna derecha */}
+      <div className="space-y-6">
+        {/* Respuestas del formulario */}
+        {questionnaire && (
+          <div className="card h-fit p-6">
+            <h2 className="mb-3 text-lg font-semibold">Formulario de la modelo</h2>
+            <dl className="space-y-2 text-sm">
+              {QUESTION_LABELS.filter((q) => {
+                const val = questionnaire[q.key];
+                return val !== undefined && val !== null && val !== "";
+              }).map((q) => (
+                <div key={q.key} className="flex justify-between gap-3">
+                  <dt className="text-slate-400">{q.label}</dt>
+                  <dd className="text-right font-medium text-slate-700">
+                    {String(questionnaire[q.key])}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
+
+        {/* Historial */}
+        <div className="card h-fit p-6">
+          <h2 className="mb-3 text-lg font-semibold">Historial</h2>
         <ol className="space-y-3">
           {model.statusEvents?.map((ev: any) => (
             <li key={ev.id} className="border-l-2 border-sky-200 pl-3">
@@ -253,7 +359,8 @@ export function ModelDetail({ master, model, marketOwners }: Props) {
               </p>
             </li>
           ))}
-        </ol>
+          </ol>
+        </div>
       </div>
     </div>
   );
