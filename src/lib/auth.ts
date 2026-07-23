@@ -1,28 +1,17 @@
 import bcrypt from "bcryptjs";
-import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
-import { ROLES, type Role } from "./constants";
+import { ROLES } from "./constants";
+import {
+  SESSION_COOKIE,
+  signSession,
+  verifySession,
+  type SessionPayload,
+} from "./jwt";
 
-export const SESSION_COOKIE = "skyblue_session";
-const TOKEN_TTL = "30d";
-
-function getSecret(): Uint8Array {
-  const secret = process.env.AUTH_SECRET;
-  if (!secret || secret.length < 16) {
-    throw new Error(
-      "AUTH_SECRET no configurado (o muy corto). Revisá tu archivo .env."
-    );
-  }
-  return new TextEncoder().encode(secret);
-}
-
-export interface SessionPayload {
-  sub: string; // user id
-  role: Role;
-  name: string;
-  email: string;
-}
+// Re-exportamos las utilidades de JWT para no romper imports existentes.
+export { SESSION_COOKIE, signSession, verifySession };
+export type { SessionPayload };
 
 export async function hashPassword(plain: string): Promise<string> {
   return bcrypt.hash(plain, 10);
@@ -33,32 +22,6 @@ export async function verifyPassword(
   hash: string
 ): Promise<boolean> {
   return bcrypt.compare(plain, hash);
-}
-
-export async function signSession(payload: SessionPayload): Promise<string> {
-  return new SignJWT({ role: payload.role, name: payload.name, email: payload.email })
-    .setProtectedHeader({ alg: "HS256" })
-    .setSubject(payload.sub)
-    .setIssuedAt()
-    .setExpirationTime(TOKEN_TTL)
-    .sign(getSecret());
-}
-
-export async function verifySession(
-  token: string
-): Promise<SessionPayload | null> {
-  try {
-    const { payload } = await jwtVerify(token, getSecret());
-    if (!payload.sub) return null;
-    return {
-      sub: payload.sub as string,
-      role: payload.role as Role,
-      name: (payload.name as string) ?? "",
-      email: (payload.email as string) ?? "",
-    };
-  } catch {
-    return null;
-  }
 }
 
 /** Setea la cookie de sesión (para route handlers de login). */

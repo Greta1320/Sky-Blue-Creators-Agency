@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifySession, SESSION_COOKIE } from "@/lib/auth";
+import { verifySession, SESSION_COOKIE } from "@/lib/jwt";
 
 // Protege el panel: sin sesión válida → redirige a /login.
 export async function middleware(req: NextRequest) {
