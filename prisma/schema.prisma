@@ -1,0 +1,201 @@
+// Sky Blue Creators Agency — esquema de datos
+// Operación de placement de modelos (Anyfans / OnlyFans) de Matías Vega.
+//
+// Nota sobre enums: SQLite no soporta enums nativos de Prisma, así que los
+// estados/roles se guardan como String y se validan en código con las
+// constantes de src/lib/constants.ts (compatibles con Postgres al migrar).
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  // Desarrollo: SQLite. Producción: cambiar a "postgresql" y ajustar DATABASE_URL.
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Usuarios y jerarquía (Master → Vendedores/Recruiters)
+// ─────────────────────────────────────────────────────────────
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  // "MASTER" (Matías, ve todo hacia abajo) | "RECRUITER" (vendedor)
+  role         String   @default("RECRUITER")
+  active       Boolean  @default(true)
+  // Comisión estándar del vendedor sobre lo que queda tras el corte del
+  // dueño de mercado (0.5 = 50/50 con Matías). Configurable por vendedor.
+  commissionRate Float  @default(0.5)
+
+  // Wallets de pago del vendedor (para cobrar comisiones).
+  walletUsdtTrc20 String?
+  walletUsdtErc20 String?
+  walletUsdcErc20 String?
+
+  // Jerarquía: qué master/manager creó a este usuario.
+  createdBy    User?    @relation("UserHierarchy", fields: [createdById], references: [id])
+  createdById  String?
+  subordinates User[]   @relation("UserHierarchy")
+
+  // Modelos que este vendedor originó (prospección).
+  modelsOriginated Model[] @relation("ModelRecruiter")
+  commissions      Commission[]
+  statusEvents     StatusEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([role])
+  @@index([createdById])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Modelos (el activo del negocio)
+// ─────────────────────────────────────────────────────────────
+model Model {
+  id String @id @default(cuid())
+
+  // --- Datos del formulario ---
+  fullName    String
+  stageName   String?
+  instagram   String?
+  whatsapp    String?
+  email       String?
+  age         Int?
+  country     String?
+  city        String?
+  languages   String?  // texto libre: "es, en"
+  experience  String?  // experiencia previa en la industria
+  notes       String?  // notas del vendedor / prospección
+  formData    String?  // JSON con el formulario crudo completo
+
+  // --- Pipeline ---
+  // PROSPECTADA → FORMULARIO_COMPLETO → LISTING_ARMADO → ENVIADA_MERCADO
+  // → COLOCADA → EN_GARANTIA → COBRADA  (o GARANTIA_ROTA / PERDIDA)
+  status String @default("PROSPECTADA")
+
+  // --- Listing / precio (lo define Matías) ---
+  price          Float?   // precio de esta modelo en particular (USD)
+  listingText    String?  // listing simplificado (generado/editado)
+  listingApproved Boolean @default(false)
+
+  // --- Cierre / colocación ---
+  agency        String?  // agencia que la contrata
+  dealType      String?  // "FIJO" (sueldo fijo) | "SPLIT" (porcentaje)
+  dealAmount    Float?   // monto base del acuerdo (USD) para calcular comisión
+  placedAt      DateTime? // fecha de colocación (arranca la garantía)
+  guaranteeEndsAt DateTime? // placedAt + 7 días
+  guaranteeStatus String @default("NA") // NA | EN_CURSO | CUMPLIDA | ROTA
+  paidAt        DateTime? // cuándo se cobró
+
+  // --- Relaciones ---
+  recruiter    User?       @relation("ModelRecruiter", fields: [recruiterId], references: [id])
+  recruiterId  String?
+  marketOwner  MarketOwner? @relation(fields: [marketOwnerId], references: [id])
+  marketOwnerId String?
+
+  statusEvents StatusEvent[]
+  commissions  Commission[]
+
+  // Origen del prospecto (formulario público, extensión Halcón, manual).
+  source String @default("MANUAL") // MANUAL | FORM | HALCON
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([recruiterId])
+  @@index([marketOwnerId])
+  @@index([guaranteeStatus])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Dueños de mercado (SOLO visibles para el Master / Matías)
+// ─────────────────────────────────────────────────────────────
+model MarketOwner {
+  id       String  @id @default(cuid())
+  name     String
+  contact  String? // WhatsApp/Telegram/email del dueño de mercado
+  market   String? // plaza: Dubai, Portugal, etc.
+  groups   String? // grupos donde postea listings (texto libre)
+  // Corte que se queda el dueño de mercado (0.40 = 40%, estandarizado).
+  cutRate  Float   @default(0.4)
+  notes    String?
+  active   Boolean @default(true)
+
+  models    Model[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────
+// Comisiones (se generan al cobrar / cumplir garantía)
+// ─────────────────────────────────────────────────────────────
+model Commission {
+  id       String @id @default(cuid())
+  model    Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  modelId  String
+  recruiter User  @relation(fields: [recruiterId], references: [id])
+  recruiterId String
+
+  dealAmount     Float  // base del acuerdo
+  marketCut      Float  // lo que se lleva el dueño de mercado
+  netAfterMarket Float  // dealAmount - marketCut
+  recruiterShare Float  // comisión del vendedor
+  matiasShare    Float  // parte de Matías
+
+  status String @default("PENDIENTE") // PENDIENTE | PAGADA
+  paidAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([recruiterId])
+  @@index([status])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Historial de estados (auditoría del pipeline)
+// ─────────────────────────────────────────────────────────────
+model StatusEvent {
+  id       String @id @default(cuid())
+  model    Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  modelId  String
+  fromStatus String?
+  toStatus   String
+  note       String?
+  actor      User?  @relation(fields: [actorId], references: [id])
+  actorId    String?
+  createdAt  DateTime @default(now())
+
+  @@index([modelId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Kit de formación / prospección (Fase 5) — visible en web y Halcón
+// ─────────────────────────────────────────────────────────────
+model TrainingResource {
+  id       String @id @default(cuid())
+  kind     String // SCRIPT | FAQ | CONTENT_IDEA
+  title    String
+  body     String
+  order    Int    @default(0)
+  active   Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kind])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Configuración general (clave/valor) — p. ej. integración Telegram
+// ─────────────────────────────────────────────────────────────
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}

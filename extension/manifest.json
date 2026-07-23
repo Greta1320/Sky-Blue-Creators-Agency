@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Halcón — Sky Blue Creators",
+  "version": "1.0.0",
+  "description": "Herramienta de prospección de Sky Blue Creators Agency. Capturá modelos, mirá tu pipeline y tené el kit de prospección a mano.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://*.instagram.com/*",
+    "https://web.whatsapp.com/*",
+    "https://*/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Halcón",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.instagram.com/*",
+        "https://web.whatsapp.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

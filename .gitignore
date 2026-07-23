@@ -1,0 +1,38 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# env
+.env
+.env.local
+.env*.local
+
+# database (SQLite en desarrollo)
+/prisma/*.db
+/prisma/*.db-journal
+/prisma/dev.db*
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# misc
+.DS_Store
+*.pem
+/coverage
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# extension build zips
+/extension/*.zip

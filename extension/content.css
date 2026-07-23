@@ -1,0 +1,47 @@
+#halcon-capture-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2147483647;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1e63a6, #0f2c4d);
+  color: #fff;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(15, 44, 77, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+#halcon-capture-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(15, 44, 77, 0.5);
+}
+#halcon-capture-btn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+#halcon-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 72px;
+  z-index: 2147483647;
+  max-width: 280px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: #fff;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+#halcon-toast.ok {
+  background: #059669;
+}
+#halcon-toast.err {
+  background: #e11d48;
+}
