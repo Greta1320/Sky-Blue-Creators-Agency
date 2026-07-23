@@ -39,6 +39,7 @@ export default async function VendedoresPage() {
               <th className="px-4 py-3">Modelos</th>
               <th className="px-4 py-3">Comisión</th>
               <th className="px-4 py-3">Ganado</th>
+              <th className="px-4 py-3">Wallets</th>
               <th className="px-4 py-3">Estado</th>
             </tr>
           </thead>
@@ -58,6 +59,30 @@ export default async function VendedoresPage() {
                     {money(earned)}
                   </td>
                   <td className="px-4 py-3">
+                    <div className="space-y-0.5 font-mono text-[10px] text-slate-500">
+                      {r.walletUsdtTrc20 && (
+                        <p title={r.walletUsdtTrc20}>
+                          TRC20: {r.walletUsdtTrc20.slice(0, 10)}…
+                        </p>
+                      )}
+                      {r.walletUsdtErc20 && (
+                        <p title={r.walletUsdtErc20}>
+                          ERC20: {r.walletUsdtErc20.slice(0, 10)}…
+                        </p>
+                      )}
+                      {r.walletUsdcErc20 && (
+                        <p title={r.walletUsdcErc20}>
+                          USDC: {r.walletUsdcErc20.slice(0, 10)}…
+                        </p>
+                      )}
+                      {!r.walletUsdtTrc20 &&
+                        !r.walletUsdtErc20 &&
+                        !r.walletUsdcErc20 && (
+                          <span className="text-amber-600">Sin cargar ⚠️</span>
+                        )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                         r.active
@@ -73,7 +98,7 @@ export default async function VendedoresPage() {
             })}
             {recruiters.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-slate-400">
+                <td colSpan={7} className="px-4 py-10 text-center text-slate-400">
                   Todavía no hay vendedores. Creá el primero.
                 </td>
               </tr>

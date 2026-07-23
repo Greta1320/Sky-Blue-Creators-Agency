@@ -218,43 +218,158 @@ async function main() {
     },
   });
 
-  // ── Kit de formación ──
+  // ── Kit de formación (contenido real del negocio) ──
   const kit = [
     {
       kind: "SCRIPT",
-      title: "Primer mensaje en Instagram",
-      body: "Hola! Trabajo con una agencia que coloca modelos en plazas internacionales (Dubai, Europa) con sueldos fijos de 1000-1500 USD/mes. Vi tu perfil y encajás perfecto. ¿Te interesa que te cuente cómo funciona?",
+      title: "1. Primer mensaje en Instagram",
+      body: `Vale, ¿qué tal? Te quería hacer una pregunta, ¿estás?
+
+(Cuando responde)
+¿Vos hacés o hiciste Only alguna vez?
+
+(Si dice que no)
+Yo me dedico a conseguir agencias a chicas que quieran ser modelos, sin exponerse en sus redes. ¿Te explico cómo funciona o ya sabés cómo es?`,
       order: 1,
     },
     {
       kind: "SCRIPT",
-      title: "Pasaje de Instagram a WhatsApp",
-      body: "Genial! Para agilizar te paso los detalles por WhatsApp. ¿Cuál es tu número? Te mando el formulario para arrancar el proceso.",
+      title: "2. Explicación del trabajo",
+      body: `Dale, ahora te paso una explicación ¿sí?
+
+El trabajo de la agencia es conseguir los clientes, hablar con ellos y elevar la facturación de la cuenta. Tu trabajo es hacer el contenido que la agencia te va indicando, y podés bloquear los países donde no querés que el contenido se vea para que nadie sepa lo que hacés.
+
+Por tu trabajo se te paga un sueldo o podés ir a comisión también. El sueldo puede ir entre los 800 y los 1.500 USD. Decime qué dudas podés tener y te digo cómo postularte para comenzar, ¿te sirve?`,
+      order: 2,
+    },
+    {
+      kind: "SCRIPT",
+      title: "3. Filtro y pase a WhatsApp / formulario",
+      body: `(Si pregunta si piden exclusividad)
+Nono tranqui, ¿vos ya estás trabajando con agencia?
+
+(Cuando está lista)
+¡Ah bien perfecto! Si querés pasame tu WhatsApp que te mando el formulario por ahí, ¿sí?
+
+→ Mandale el link del formulario con tu referido:
+/aplicar?ref=TU-EMAIL
+Así la modelo queda registrada automáticamente a tu nombre y la comisión es tuya.`,
+      order: 3,
+    },
+    {
+      kind: "FAQ",
+      title: "¿Piden exclusividad?",
+      body: "No. La modelo puede consultar sin compromiso. El único filtro es si ya está trabajando con otra agencia.",
+      order: 1,
+    },
+    {
+      kind: "FAQ",
+      title: "¿Es seguro?",
+      body: "Solo trabajamos con agencias verificadas. Eso no se negocia.",
       order: 2,
     },
     {
       kind: "FAQ",
       title: "¿Tiene costo para la modelo?",
-      body: "No. La modelo no paga nada. La agencia paga la colocación; nosotros cobramos del lado del mercado/agencia.",
-      order: 1,
+      body: "No. La modelo no paga nada. Nosotros cobramos del lado del mercado/agencia.",
+      order: 3,
     },
     {
       kind: "FAQ",
       title: "¿Qué es la garantía de 7 días?",
       body: "Desde que la modelo es colocada tiene 7 días para comunicarse con la agencia y mandar contenido. Si cumple, el cierre queda firme y se cobra la comisión.",
-      order: 2,
+      order: 4,
     },
     {
       kind: "CONTENT_IDEA",
-      title: "Testimonios de ganancias",
-      body: "Publicá historias reales (sin exponer identidad) de cuánto está ganando una modelo colocada por mes. Genera confianza y atrae prospectos.",
+      title: "Autoridad / posicionamiento",
+      body: `• "No soy solo una reclutadora, soy el puente entre vos y la agencia correcta 🤍"
+
+• "Trabajo con estructuras profesionales que ya tienen experiencia ayudando a creadoras a crecer"
+
+• "Mi trabajo termina cuando vos ya estás trabajando tranquila y acompañada"`,
       order: 1,
     },
     {
       kind: "CONTENT_IDEA",
-      title: "Detrás de escena del proceso",
-      body: "Mostrá cómo es el paso a paso: prospección → formulario → colocación. La transparencia convierte.",
+      title: "Educativo / valor",
+      body: `• "Diferencia entre arrancar sola y arrancar con equipo:
+Sola → todo el peso es tuyo
+Con equipo → estrategia, soporte y acompañamiento real"
+
+• "Pregunta que más me hacen: '¿Es seguro?'
+Solo trabajamos con agencias verificadas. Eso no se negocia"
+
+• "Si tu contenido no está generando lo que debería, probablemente no es tu contenido. Es la falta de estructura detrás"`,
       order: 2,
+    },
+    {
+      kind: "CONTENT_IDEA",
+      title: "Historias con caja de preguntas",
+      body: `Opción 1:
+"Te conecto con las mejores agencias internacionales 🌐
+¿Qué dudas tenés sobre el proceso? Dejámelas acá 👇"
+[Caja de preguntas: "Dejá tu pregunta"]
+
+Opción 2:
+"Mi trabajo es conectarte con agencias internacionales serias.
+Contame: ¿qué es lo que más te frena para arrancar?"
+[Caja de preguntas]
+
+Opción 3:
+"Trabajo con agencias de varios países, eligiendo la que mejor encaje con vos.
+¿Qué te gustaría saber antes de aplicar?"
+[Caja de preguntas]
+
+Opción 4 (formato AMA):
+"Hoy respondo todo 🤍
+Preguntame lo que quieras sobre cómo conecto creadoras con agencias internacionales"
+[Caja de preguntas: "Preguntame algo"]
+
+Tips de uso:
+• Subí la historia con la caja de preguntas, y al otro día subí las respuestas en historias nuevas (contenido extra "gratis": preguntas reales + respuestas tuyas).
+• Si nadie pregunta las primeras veces, meté vos 2-3 preguntas plantadas tipo "¿es seguro?".`,
+      order: 3,
+    },
+    {
+      kind: "GUIA",
+      title: "Creación de cuenta OF y pasos de verificación",
+      body: `1. Que ingrese desde Safari y busque "OnlyFans".
+2. Que ponga "Registrarse".
+3. Complete todos sus datos.
+4. Con la cuenta creada: abajo de todo, tocar la casita para ir al feed. Después, abajo a la derecha, el circulito del perfil. Ahí aparece la opción "Conviértete en creador" → que la toque.
+5. Le va a pedir foto de portada y foto de perfil: que ponga ambas y que se vea su cara. Y una biografía que diga "Bienvenidos a mi cuenta de OnlyFans" y su nombre (después se borra, es solo para la verificación).
+6. Le van a pedir fotos del DNI:
+   • Parte delantera
+   • Parte trasera
+   • Una foto de su cara con el DNI al lado — que se vean bien la cara y el DNI (¡CON CÁMARA SELFIE NO!)`,
+      order: 1,
+    },
+    {
+      kind: "GUIA",
+      title: "Crear las otras dos cuentas OF",
+      body: `1. Cerrá sesión en la cuenta actual.
+2. Andá a onlyfans.com.
+3. Registrate con un correo nuevo.
+4. Elegí un nombre de usuario distinto.
+5. Verificá el correo.
+6. Completá la verificación de creador (ID + selfie).
+7. Añadí los datos de pago.
+8. Esperá la aprobación (normalmente 24–72 h).
+9. Repetí lo mismo para la tercera cuenta.`,
+      order: 2,
+    },
+    {
+      kind: "GUIA",
+      title: "Wallets de pago (para cobrar tus comisiones)",
+      body: `Cargá tus wallets en la sección "💳 Mi wallet" del panel, en este formato:
+
+USDT TRC20:
+USDT ERC20:
+USDC ERC20:
+
+⚠️ Es importante que las wallets estén correctamente escritas. Cualquier error en la wallet puede generar demoras o problemas en el pago.`,
+      order: 3,
     },
   ] as const;
 

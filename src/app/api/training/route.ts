@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 }
 
 const resourceSchema = z.object({
-  kind: z.enum(["SCRIPT", "FAQ", "CONTENT_IDEA"]),
+  kind: z.enum(["SCRIPT", "FAQ", "CONTENT_IDEA", "GUIA"]),
   title: z.string().min(1),
   body: z.string().min(1),
   order: z.coerce.number().int().optional(),

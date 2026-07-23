@@ -214,7 +214,7 @@ async function loadKit() {
     cont.innerHTML = '<p class="muted">No se pudo cargar el kit.</p>';
     return;
   }
-  const kinds = { SCRIPT: "Scripts", FAQ: "FAQs", CONTENT_IDEA: "Ideas de contenido" };
+  const kinds = { SCRIPT: "Scripts", FAQ: "FAQs", CONTENT_IDEA: "Ideas de contenido", GUIA: "Guías" };
   const grouped = {};
   for (const r of res.data.resources) (grouped[r.kind] ||= []).push(r);
 

@@ -5,6 +5,7 @@ const KIND_META: Record<string, { label: string; icon: string }> = {
   SCRIPT: { label: "Scripts de prospección", icon: "💬" },
   FAQ: { label: "Preguntas frecuentes", icon: "❓" },
   CONTENT_IDEA: { label: "Ideas de contenido para tu Instagram", icon: "💡" },
+  GUIA: { label: "Guías paso a paso", icon: "📋" },
 };
 
 export default async function FormacionPage() {

@@ -31,6 +31,11 @@ model User {
   // dueño de mercado (0.5 = 50/50 con Matías). Configurable por vendedor.
   commissionRate Float  @default(0.5)
 
+  // Wallets de pago del vendedor (para cobrar comisiones).
+  walletUsdtTrc20 String?
+  walletUsdtErc20 String?
+  walletUsdcErc20 String?
+
   // Jerarquía: qué master/manager creó a este usuario.
   createdBy    User?    @relation("UserHierarchy", fields: [createdById], references: [id])
   createdById  String?

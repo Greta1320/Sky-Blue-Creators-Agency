@@ -34,6 +34,7 @@ export default async function DashboardLayout({
           <NavLink href="/dashboard/comisiones" label="Comisiones" icon="💰" />
           <NavLink href="/dashboard/formacion" label="Formación" icon="🎓" />
           <NavLink href="/dashboard/halcon" label="Extensión Halcón" icon="🦅" />
+          <NavLink href="/dashboard/wallet" label="Mi wallet" icon="💳" />
           {master && (
             <>
               <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
