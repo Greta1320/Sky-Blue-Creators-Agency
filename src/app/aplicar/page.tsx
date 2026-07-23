@@ -43,7 +43,13 @@ function AplicarForm() {
 
   if (done) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-sky-500 to-sky-900 p-4">
+      <main
+        className="flex min-h-screen items-center justify-center p-4"
+        style={{
+          background:
+            "linear-gradient(160deg, #0f2c4d 0%, #123a63 55%, #0c2440 100%)",
+        }}
+      >
         <div className="card max-w-md p-8 text-center">
           <div className="mb-3 text-4xl">🎉</div>
           <h1 className="text-xl font-bold text-slate-800">
@@ -59,16 +65,24 @@ function AplicarForm() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-sky-500 to-sky-900 p-4 py-10">
+    <main
+      className="min-h-screen p-4 py-12"
+      style={{
+        background:
+          "radial-gradient(900px 500px at 85% -10%, rgba(74,144,205,0.35), transparent 55%), radial-gradient(700px 480px at 0% 110%, rgba(47,119,189,0.28), transparent 55%), linear-gradient(160deg, #0f2c4d 0%, #123a63 55%, #0c2440 100%)",
+      }}
+    >
       <div className="mx-auto max-w-2xl">
-        <div className="mb-6 text-center text-white">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-md">
-            <Logo size={44} />
+        <div className="mb-8 text-center text-white">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-[0_12px_32px_-8px_rgba(2,12,27,0.6)]">
+            <Logo size={40} />
           </div>
-          <h1 className="mt-3 text-2xl font-bold">Sky Blue Creators Agency</h1>
-          <p className="text-sky-100">
-            Completá el formulario. Es confidencial: no se usan tus redes ni se
-            publica en tu país.
+          <h1 className="mt-4 text-[26px] font-bold tracking-tight">
+            Sky Blue Creators Agency
+          </h1>
+          <p className="mx-auto mt-1 max-w-md text-[15px] text-sky-100/80">
+            Completá el formulario para postularte. Es 100% confidencial: no se
+            usan tus redes ni se publica en tu país.
           </p>
         </div>
 

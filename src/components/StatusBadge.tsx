@@ -1,23 +1,24 @@
 import { STATUS_LABELS } from "@/lib/constants";
 
-const STYLES: Record<string, string> = {
-  PROSPECTADA: "bg-slate-100 text-slate-700",
-  FORMULARIO_COMPLETO: "bg-indigo-100 text-indigo-700",
-  LISTING_ARMADO: "bg-violet-100 text-violet-700",
-  ENVIADA_MERCADO: "bg-amber-100 text-amber-700",
-  COLOCADA: "bg-sky-100 text-sky-700",
-  EN_GARANTIA: "bg-orange-100 text-orange-700",
-  COBRADA: "bg-emerald-100 text-emerald-700",
-  GARANTIA_ROTA: "bg-rose-100 text-rose-700",
-  PERDIDA: "bg-rose-100 text-rose-700",
+const STYLES: Record<string, { chip: string; dot: string }> = {
+  PROSPECTADA: { chip: "bg-slate-100 text-slate-700 ring-slate-200", dot: "bg-slate-400" },
+  FORMULARIO_COMPLETO: { chip: "bg-indigo-50 text-indigo-700 ring-indigo-200", dot: "bg-indigo-500" },
+  LISTING_ARMADO: { chip: "bg-violet-50 text-violet-700 ring-violet-200", dot: "bg-violet-500" },
+  ENVIADA_MERCADO: { chip: "bg-amber-50 text-amber-700 ring-amber-200", dot: "bg-amber-500" },
+  COLOCADA: { chip: "bg-sky-50 text-sky-700 ring-sky-200", dot: "bg-sky-500" },
+  EN_GARANTIA: { chip: "bg-orange-50 text-orange-700 ring-orange-200", dot: "bg-orange-500" },
+  COBRADA: { chip: "bg-emerald-50 text-emerald-700 ring-emerald-200", dot: "bg-emerald-500" },
+  GARANTIA_ROTA: { chip: "bg-rose-50 text-rose-700 ring-rose-200", dot: "bg-rose-500" },
+  PERDIDA: { chip: "bg-rose-50 text-rose-600 ring-rose-200", dot: "bg-rose-400" },
 };
 
 export function StatusBadge({ status }: { status: string }) {
-  const cls = STYLES[status] || "bg-slate-100 text-slate-700";
+  const s = STYLES[status] || STYLES.PROSPECTADA;
   return (
     <span
-      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${cls}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-semibold ring-1 ring-inset ${s.chip}`}
     >
+      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
       {STATUS_LABELS[status] || status}
     </span>
   );
