@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { ROLES } from "@/lib/constants";
 import { NavLink } from "@/components/NavLink";
 import { LogoutButton } from "@/components/LogoutButton";
+import { Logo } from "@/components/Logo";
 
 export default async function DashboardLayout({
   children,
@@ -18,9 +19,9 @@ export default async function DashboardLayout({
       {/* Sidebar */}
       <aside className="flex w-60 flex-col border-r border-slate-200 bg-white p-4">
         <div className="mb-6 flex items-center gap-2 px-2">
-          <span className="text-2xl">🦅</span>
+          <Logo size={32} />
           <div>
-            <p className="text-sm font-bold leading-tight text-slate-800">
+            <p className="text-sm font-bold leading-tight text-sky-900">
               Sky Blue
             </p>
             <p className="text-xs text-slate-400">Creators Agency</p>

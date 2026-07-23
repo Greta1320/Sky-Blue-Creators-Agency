@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { Logo } from "@/components/Logo";
 
 export default function AplicarPage() {
   return (
@@ -72,8 +73,10 @@ function AplicarForm() {
     <main className="min-h-screen bg-gradient-to-br from-sky-500 to-sky-800 p-4 py-10">
       <div className="mx-auto max-w-lg">
         <div className="mb-6 text-center text-white">
-          <div className="text-4xl">🦅</div>
-          <h1 className="mt-2 text-2xl font-bold">Sky Blue Creators Agency</h1>
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-md">
+            <Logo size={44} />
+          </div>
+          <h1 className="mt-3 text-2xl font-bold">Sky Blue Creators Agency</h1>
           <p className="text-sky-100">
             Completá tus datos para postularte. Es rápido y confidencial.
           </p>

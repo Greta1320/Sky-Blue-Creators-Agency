@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Logo } from "@/components/Logo";
 
 export default function LoginPage() {
   return (
@@ -47,12 +48,10 @@ function LoginForm() {
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-sky-500 to-sky-800 p-4">
       <div className="card w-full max-w-sm p-8">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-sky-600 text-2xl">
-            🦅
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-slate-100">
+            <Logo size={36} />
           </div>
-          <h1 className="text-xl font-bold text-slate-800">
-            Sky Blue Creators
-          </h1>
+          <h1 className="text-xl font-bold text-sky-900">Sky Blue Creators</h1>
           <p className="text-sm text-slate-500">Panel de administración</p>
         </div>
 
