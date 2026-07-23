@@ -2,6 +2,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ROLES } from "@/lib/constants";
 import { money } from "@/lib/format";
+import { CommissionsTable } from "@/components/CommissionsTable";
 
 export default async function ComisionesPage() {
   const user = (await getCurrentUser())!;
@@ -32,8 +33,9 @@ export default async function ComisionesPage() {
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-slate-800">Comisiones</h1>
         <p className="text-sm text-slate-500">
-          40% dueño de mercado · resto 50/50 Matías / vendedor, tras cumplir la
-          garantía de 7 días.
+          {master
+            ? "Al cobrar una modelo se crea un borrador con una sugerencia (40% mercado · resto 50/50). Lo completás y ajustás vos antes de pagar."
+            : "Tus comisiones. Matías confirma el monto final de cada una."}
         </p>
       </header>
 
@@ -66,67 +68,10 @@ export default async function ComisionesPage() {
         )}
       </section>
 
-      <div className="card overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
-            <tr>
-              <th className="px-4 py-3">Modelo</th>
-              {master && <th className="px-4 py-3">Vendedor</th>}
-              <th className="px-4 py-3">Acuerdo</th>
-              <th className="px-4 py-3">Mercado</th>
-              <th className="px-4 py-3">Vendedor</th>
-              {master && <th className="px-4 py-3">Matías</th>}
-              <th className="px-4 py-3">Estado</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {commissions.map((c) => (
-              <tr key={c.id} className="hover:bg-slate-50">
-                <td className="px-4 py-3 font-medium">
-                  {c.model.stageName || c.model.fullName}
-                </td>
-                {master && (
-                  <td className="px-4 py-3 text-slate-600">
-                    {c.recruiter.name}
-                  </td>
-                )}
-                <td className="px-4 py-3">{money(c.dealAmount)}</td>
-                <td className="px-4 py-3 text-slate-500">
-                  {money(c.marketCut)}
-                </td>
-                <td className="px-4 py-3 font-semibold text-sky-700">
-                  {money(c.recruiterShare)}
-                </td>
-                {master && (
-                  <td className="px-4 py-3">{money(c.matiasShare)}</td>
-                )}
-                <td className="px-4 py-3">
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                      c.status === "PAGADA"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-amber-100 text-amber-700"
-                    }`}
-                  >
-                    {c.status === "PAGADA" ? "Pagada" : "Pendiente"}
-                  </span>
-                </td>
-              </tr>
-            ))}
-            {commissions.length === 0 && (
-              <tr>
-                <td
-                  colSpan={master ? 7 : 4}
-                  className="px-4 py-10 text-center text-slate-400"
-                >
-                  Todavía no hay comisiones. Se generan al marcar una modelo como
-                  “Cobrada”.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <CommissionsTable
+        master={master}
+        commissions={JSON.parse(JSON.stringify(commissions))}
+      />
     </div>
   );
 }

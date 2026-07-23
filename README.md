@@ -19,7 +19,7 @@ comisión.
 | **Panel Vendedor** | Solo ve **sus** modelos, su pipeline y sus comisiones. Sin acceso a dueños de mercado ni grupos. |
 | **CRM de modelos** | Pipeline con estados: Prospectada → Formulario → Listing → Enviada a mercado → Colocada → En garantía → Cobrada. |
 | **Garantía 7 días** | Al colocar una modelo arranca la cuenta atrás; alerta cuando faltan pocos días o vence. |
-| **Comisiones** | Cálculo automático: **40 %** dueño de mercado; del resto, **50/50** Matías / vendedor. Se genera al marcar "Cobrada". |
+| **Comisiones** | Al marcar "Cobrada" se crea un **borrador** con una **sugerencia** (40 % mercado · resto 50/50). **Matías lo completa/ajusta** y marca como pagada; el resto no puede editarlas. |
 | **Formulario público** | `/aplicar` — la modelo carga sus datos directo al CRM (reemplaza el WhatsApp manual). Soporta `?ref=<vendedor>`. |
 | **Kit de formación** | Scripts, FAQs e ideas de contenido, disponibles en la web y en Halcón. |
 | **Extensión Halcón** | Captura de prospectos de 1 clic desde Instagram / WhatsApp Web, pipeline propio y kit a mano. |
@@ -100,11 +100,17 @@ comisión vendedor       = neto × commissionRate       (por defecto 50 %)
 parte Matías            = neto − comisión vendedor
 ```
 
-La comisión se genera al pasar la modelo a **Cobrada** (garantía cumplida).
-Ejemplo con `dealAmount = 1400` y mercado al 40 %: mercado **$560**, vendedor
-**$420**, Matías **$420**.
+Al pasar la modelo a **Cobrada** (garantía cumplida) se crea un **borrador de
+comisión** con esta sugerencia ya pre-cargada. **No es definitiva**: Matías la
+**completa/ajusta** desde la sección _Comisiones_ (puede cambiar cualquiera de
+los montos y usar el botón "Sugerir reparto" como atajo) y la marca como
+**pagada**. Los vendedores solo ven el monto final; no pueden editarlas.
 
-Implementación: [`src/lib/commissions.ts`](src/lib/commissions.ts).
+Ejemplo de sugerencia con `dealAmount = 1400` y mercado al 40 %: mercado
+**$560**, vendedor **$420**, Matías **$420**.
+
+Implementación: cálculo sugerido en [`src/lib/commissions.ts`](src/lib/commissions.ts);
+edición del master en `PATCH /api/commissions/[id]`.
 
 ---
 

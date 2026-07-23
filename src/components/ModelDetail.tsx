@@ -195,7 +195,11 @@ export function ModelDetail({ master, model, marketOwners }: Props) {
             {base > 0 && (
               <div className="mt-4 rounded-lg bg-slate-50 p-4 text-sm">
                 <p className="mb-2 font-medium text-slate-700">
-                  Previsualización de comisión (sobre {money(base)})
+                  Comisión sugerida (sobre {money(base)})
+                </p>
+                <p className="mb-2 text-xs text-slate-400">
+                  Es solo una referencia. Al marcar “Cobrada” se crea un borrador
+                  que completás y ajustás en la sección Comisiones.
                 </p>
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div>

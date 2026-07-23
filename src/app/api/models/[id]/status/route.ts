@@ -75,6 +75,9 @@ export async function POST(
         where: { modelId: model.id },
       });
       if (!existing) {
+        // Se crea un BORRADOR con una sugerencia pre-cargada (40% mercado,
+        // resto 50/50). Queda en estado PENDIENTE para que Matías la
+        // complete/ajuste y la marque como pagada desde el panel de Comisiones.
         const base = model.dealAmount ?? model.price ?? 0;
         const marketCutRate =
           model.marketOwner?.cutRate ?? DEFAULT_MARKET_CUT_RATE;
