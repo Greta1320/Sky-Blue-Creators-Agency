@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>Halcón</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <span class="brand">🦅 Halcón</span>
+      <span id="userChip" class="chip hidden"></span>
+    </header>
+
+    <!-- Pantalla de login -->
+    <section id="loginView" class="view">
+      <p class="muted">Iniciá sesión con tu cuenta de Sky Blue.</p>
+      <label>Email</label>
+      <input id="email" type="email" placeholder="tu@email.com" />
+      <label>Contraseña</label>
+      <input id="password" type="password" placeholder="••••••" />
+      <p id="loginError" class="error hidden"></p>
+      <button id="loginBtn" class="btn-primary">Ingresar</button>
+      <button id="settingsToggle" class="link">Ajustes de conexión</button>
+      <div id="settings" class="settings hidden">
+        <label>URL de la API</label>
+        <input id="apiBase" type="text" placeholder="http://localhost:3000" />
+        <button id="saveApi" class="btn-ghost">Guardar URL</button>
+      </div>
+    </section>
+
+    <!-- App autenticada -->
+    <section id="appView" class="view hidden">
+      <nav class="tabs">
+        <button class="tab active" data-tab="capture">Capturar</button>
+        <button class="tab" data-tab="pipeline">Pipeline</button>
+        <button class="tab" data-tab="kit">Kit</button>
+      </nav>
+
+      <!-- Tab: Capturar -->
+      <div id="tab-capture" class="tabpane">
+        <p class="muted">Cargá un prospecto directo al CRM.</p>
+        <label>Nombre / @usuario *</label>
+        <input id="cName" type="text" placeholder="Nombre o @instagram" />
+        <label>Instagram</label>
+        <input id="cIg" type="text" placeholder="@usuario" />
+        <label>WhatsApp</label>
+        <input id="cWa" type="text" placeholder="+54…" />
+        <label>País</label>
+        <input id="cCountry" type="text" />
+        <label>Notas</label>
+        <textarea id="cNotes" rows="2"></textarea>
+        <p id="captureMsg" class="msg hidden"></p>
+        <button id="captureBtn" class="btn-primary">Capturar prospecto</button>
+        <p class="hint">
+          Tip: en Instagram o WhatsApp Web usá el botón flotante “🦅 Capturar”.
+        </p>
+      </div>
+
+      <!-- Tab: Pipeline -->
+      <div id="tab-pipeline" class="tabpane hidden">
+        <div id="masterStats" class="hidden"></div>
+        <div id="pipelineStats" class="stats"></div>
+        <h4>Últimas modelos</h4>
+        <ul id="modelList" class="list"></ul>
+      </div>
+
+      <!-- Tab: Kit -->
+      <div id="tab-kit" class="tabpane hidden">
+        <div id="kitList"></div>
+      </div>
+
+      <button id="logoutBtn" class="link logout">Cerrar sesión</button>
+    </section>
+
+    <script src="config.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
